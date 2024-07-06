@@ -25,6 +25,7 @@ const Page = () => {
 
   return (
     <div>
+      
       <Dashboard  />
     </div>
   );
