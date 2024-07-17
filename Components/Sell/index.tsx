@@ -1,7 +1,7 @@
 import React from 'react';
 import styles from './index.module.scss'; // Import CSS module for styling
 
-const Sell = ({ show, onClose, castle, handleInputChange, handleSave }) => {
+const Sell = ({ show, onClose, castle, handleInputChange, handleSave }: any) => {
   if (!show || !castle) return null;
 
   return (
@@ -36,6 +36,26 @@ const Sell = ({ show, onClose, castle, handleInputChange, handleSave }) => {
               type="number"
               value={castle.quantitySold || ''}
               onChange={(e) => handleInputChange('quantitySold', e.target.value)}
+            />
+          </div>
+
+          {/* Referral Code */}
+          <div className={styles.inputContainer}>
+            <label>Referral Code</label>
+            <input
+              type="text"
+              value={castle.referralCode || ''}
+              onChange={(e) => handleInputChange('referralCode', e.target.value)}
+            />
+          </div>
+
+          {/* Number of Coins */}
+          <div className={styles.inputContainer}>
+            <label>Number of Coins</label>
+            <input
+              type="number"
+              value={castle.numberOfCoins || ''}
+              onChange={(e) => handleInputChange('numberOfCoins', e.target.value)}
             />
           </div>
 

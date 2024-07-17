@@ -1,0 +1,185 @@
+.message-form {
+  max-width: 60%;
+  margin: auto;
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  margin-top: 100px;
+  display: flex;
+  flex-direction: column;
+  height: 80vh;
+
+  h2 {
+    font-size: 24px;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+
+  .message-container {
+    flex: 1;
+    overflow-y: auto;
+    margin-bottom: 20px;
+    padding: 10px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    display: flex;
+    flex-direction: column;
+
+    .message {
+      padding: 10px;
+      margin-bottom: 10px;
+      border-radius: 20px;
+      position: relative;
+      max-width: 60%;
+      word-wrap: break-word;
+
+      &.sent {
+        background-color: #dcf8c6;
+        align-self: flex-end;
+        margin-right: 10px;
+      }
+
+      &.received {
+        background-color: #fff;
+        border: 1px solid #ddd;
+        align-self: flex-start;
+        margin-left: 10px;
+      }
+
+      strong {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: bold;
+      }
+    }
+  }
+
+  .form-group {
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    width: 100%;
+
+    label {
+      font-weight: bold;
+      display: none; // Hide labels for cleaner look
+    }
+
+    input,
+    textarea {
+      width: 100%;
+      padding: 10px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 20px;
+      transition: border-color 0.3s ease;
+      margin-right: 10px;
+      flex: 1;
+
+      &:focus {
+        outline: none;
+        border-color: #2196f3;
+      }
+    }
+
+    textarea {
+      resize: none; // Prevent resizing
+    }
+  }
+
+  .send-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px;
+    background-color: #2196f3;
+    color: white;
+    font-size: 16px;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    width: 40px;
+    height: 40px;
+    flex-shrink: 0;
+
+    &:hover {
+      background-color: #0d8aec;
+    }
+
+    svg {
+      margin-left: 0;
+    }
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .message-form {
+    max-width: 95%;
+    margin-top: 30px;
+    padding: 15px;
+    height: auto;
+  }
+
+  .message-container {
+    margin-bottom: 15px;
+    padding: 8px;
+  }
+
+  .message {
+    max-width: 75%;
+  }
+
+  .form-group {
+    flex-direction: column;
+    margin-bottom: 10px;
+
+    input,
+    textarea {
+      margin-right: 0;
+      margin-bottom: 10px;
+    }
+  }
+
+  .send-button {
+    width: 36px;
+    height: 36px;
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .message-form {
+    max-width: 100%;
+    margin-top: 20px;
+    padding: 10px;
+  }
+
+  .message-container {
+    margin-bottom: 10px;
+    padding: 5px;
+  }
+
+  .message {
+    max-width: 90%;
+  }
+
+  .form-group {
+    margin-bottom: 5px;
+
+    input,
+    textarea {
+      padding: 8px;
+      font-size: 14px;
+    }
+  }
+
+  .send-button {
+    width: 32px;
+    height: 32px;
+    font-size: 12px;
+  }
+}

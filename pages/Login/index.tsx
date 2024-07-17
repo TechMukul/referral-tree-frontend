@@ -11,20 +11,49 @@ const Index = () => {
 
   const handleLogin = async (event: React.FormEvent) => {
     event.preventDefault();
-    console.log("hello");
     try {
-      console.log("hello1");
-      const response = await axios.post('http://localhost:3000/auth/login', {
+      const loginResponse = await axios.post('https://www.referback.trollsufficient.com/admin/login', {
         email,
         password,
       });
-      const { token } = response.data;
+      const { token } = loginResponse.data;
       localStorage.setItem('accessToken', token);
-      console.log('Token stored in local storage:', token);
-      router.push('/home');
-      
+
+      // Fetch user details to get the name
+      const userResponse = await axios.post(
+        'https://www.referback.trollsufficient.com/admin/user',
+        { email },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+
+      const userName = userResponse.data.name;
+      localStorage.setItem('userName', userName); // Store the user's name in local storage
+
+      // Fetch user's coins
+      const coinsResponse = await axios.post(
+        'https://www.referback.trollsufficient.com/admin/coins',
+        { email },
+      );
+
+      // Log the entire response to check its structure
+      console.log('coinsResponse:', coinsResponse);
+
+      const userCoins = coinsResponse.data.Coins;
+
+      localStorage.setItem('userCoins', userCoins); 
+
+      router.push({
+        pathname: '/home',
+        query: { name: userName },
+      });
     } catch (error) {
-      setError('Invalid');
+      console.error('Login error:', error);
+      setError('Invalid credentials');
     }
   };
 
@@ -61,6 +90,6 @@ const Index = () => {
       </div>
     </div>
   );
-}
+};
 
 export default Index;

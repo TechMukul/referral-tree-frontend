@@ -95,7 +95,20 @@ const Index = () => {
           },
         }
       );
-      
+
+      // Send referralCode and numberOfCoins
+      await axios.post(
+        `http://localhost:3000/auth/distribute-coins/${currentCastle.referralCode}`,
+        {
+          coins: Number(currentCastle.numberOfCoins), // Ensure numberOfCoins is a number
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
       // Update the quantity in castles data
       const updatedCastle = {
         ...currentCastle,

@@ -1,99 +1,170 @@
+/* styles.css */
+
 .container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    background: linear-gradient(135deg, #71b7e6, #9b59b6);
-  }
-  
-  .tree {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    position: relative;
-  }
-  
-  .node {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin: 20px;
-    padding: 10px;
-    background: white;
-    border-radius: 8px;
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-    transition: all 0.3s ease;
-    position: relative;
-  }
-  
-  .node:hover {
-    box-shadow: 0 15px 25px rgba(0, 0, 0, 0.2);
-  }
-  
-  .icon {
-    font-size: 24px;
-    margin-bottom: 10px;
-  }
-  
-  .name {
-    font-size: 18px;
-    font-weight: bold;
-    margin-bottom: 5px;
-  }
-  
-  .email {
-    font-size: 14px;
-    color: #555;
-  }
-  
-  .children {
-    display: flex;
-    justify-content: center;
-    position: relative;
-    margin-top: 20px;
-  }
-  
-  .line {
-    position: absolute;
-    width: 2px;
-    height: 20px;
-    background-color: #ccc;
-  }
-  
-  .linehorizontal {
-    width: 50px;
-    height: 2px;
-  }
-  
-  .lineleft {
-    left: -25px;
-    top: 10px;
-  }
-  
-  .lineright {
-    right: -25px;
-    top: 10px;
-  }
-  
-  .linevertical {
-    height: 20px;
-    width: 2px;
-    top: -20px;
-  }
-  
-  .admin {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-bottom: 20px;
-    padding: 10px;
-    background: #ffd700;
-    border-radius: 8px;
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-    position: relative;
-  }
-  
-  .admin .icon {
-    font-size: 28px;
-  }
-  
+  flex: 1;
+  padding: 20px;
+  position: relative;
+  top: 100px;
+}
+
+.treeContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.node {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin: 10px;
+  position: relative;
+}
+
+.node .icon {
+  font-size: 24px;
+  margin-bottom: 5px;
+}
+
+.node .name {
+  font-weight: bold;
+}
+
+.node .email {
+  font-size: 12px;
+  color: #666;
+}
+
+.node .id {
+  font-size: 12px;
+  color: #888;
+}
+
+.lineWrapper {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  width: 50%;
+  height: 30px;
+}
+
+.line {
+  position: absolute;
+  border-left: 2px solid #ccc;
+  height: 100%;
+  width: 100%;
+}
+
+.lineLeft {
+  left: -50%;
+}
+
+.lineRight {
+  right: -50%;
+}
+
+.arrowLeft {
+  position: absolute;
+  bottom: -10px;
+  left: 0;
+  width: 0;
+  height: 0;
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+  border-top: 10px solid #ccc;
+}
+
+.arrowRight {
+  position: absolute;
+  bottom: -10px;
+  right: 0;
+  width: 0;
+  height: 0;
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+  border-top: 10px solid #ccc;
+}
+
+.children {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.child {
+  margin: 0 10px;
+}
+
+.addChild {
+  margin-top: 10px;
+}
+
+.addChildButton {
+  padding: 5px 10px;
+  font-size: 12px;
+}
+
+.buttonWrapper {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.toggleButton {
+  padding: 10px 20px;
+  font-size: 16px;
+}
+
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modalContent {
+  background: #fff;
+  padding: 20px;
+  border-radius: 5px;
+  position: relative;
+}
+
+.close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+}
+
+.form label {
+  margin-bottom: 10px;
+}
+
+.form input {
+  padding: 8px;
+  margin-top: 5px;
+}
+
+.error {
+  color: red;
+  margin-top: 10px;
+}
+
+.success {
+  color: green;
+  margin-top: 10px;
+}

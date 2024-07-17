@@ -1,21 +1,23 @@
 "use client";
 import React from "react";
 import { useRouter } from "next/navigation";
-
+// import '../styles/styles.css'
 const LoginPage = () => {
   const router = useRouter();
 
   React.useEffect(() => {
-    // Check if token exists
     const token = localStorage.getItem("token");
 
-    // Redirect only if token doesn't exist
     if (!token) {
-      router.push("/Login"); // Redirect to login page
+      router.push("/Login");
     }
   }, [router]);
 
-  return <div>Please login first refresh this page again for login</div>; // This component just handles redirection
+  return (
+    <div className="index" style={{ margin: "0px" }}>
+      Please refresh this page again for the login Screen
+    </div>
+  );
 };
 
 export default LoginPage;
