@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import styles from "./index.module.scss";
 import Navbar from "../../Components/Navbar";
-import Dashboard from "../../Components/Dashboardleft";
 import axios from "axios";
 
 interface User {
@@ -14,7 +13,7 @@ interface User {
   __v: number;
   leftChild?: string;
   rightChild?: string;
-  coins?: string;
+  coins?: number;
   referralCode?: string;
 }
 
@@ -24,10 +23,11 @@ interface TreeNodeProps {
   right: TreeNodeProps | null;
   onClick: (node: User) => void;
   onAddChild: (parentId: string, selectedOption: "left" | "right") => void;
+  refreshKey: number; // Pass refreshKey as prop
 }
 
 const createBinaryTree = (users: User[]): Map<string, TreeNodeProps> => {
-  const userMap = new Map<string, TreeNodeProps>();
+  const userMap = new Map<string, any>();
 
   users.forEach((user) => {
     userMap.set(user._id, { node: user, left: null, right: null });
@@ -52,57 +52,131 @@ const TreeNode: React.FC<TreeNodeProps> = ({
   right,
   onClick,
   onAddChild,
+  refreshKey,
 }) => {
+  const [showCoinsPopup, setShowCoinsPopup] = useState(false);
+  const [newCoins, setNewCoins] = useState("");
+  const [updatingCoins, setUpdatingCoins] = useState(false);
+
+  const handleCoinsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setNewCoins(e.target.value);
+  };
+
+  const handleUpdateCoins = async () => {
+    try {
+      setUpdatingCoins(true);
+      const token = localStorage.getItem("accessToken");
+      const apiEndpoint = `https://www.referback.trollsufficient.com/admin/distribute-coins/${node.referralCode}`;
+
+      const response = await axios.post(
+        apiEndpoint,
+        { coins: newCoins },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (response.status !== 200) {
+        throw new Error("Failed to update coins");
+      }
+
+      console.log("Coins updated successfully:", response.data);
+      setNewCoins("");
+      setShowCoinsPopup(false);
+      setUpdatingCoins(false);
+
+      // Trigger refresh by incrementing refreshKey
+      handleRefresh();
+    } catch (error) {
+      console.error("Error updating coins:", error);
+      setUpdatingCoins(false);
+    }
+  };
+
   const handleAddChild = (selectedOption: "left" | "right") => {
     onAddChild(node._id, selectedOption);
   };
 
   return (
+    <>
     <div className={styles.node} onClick={() => onClick(node)}>
       <div className={styles.icon}>
         <i className="fas fa-user"></i>
       </div>
       <div className={styles.name}>{node.name}</div>
       <div className={styles.email}>{node.email}</div>
-      {/* <div className={styles.id}>ID: {node._id}</div> */}
       <div className={styles.id}>Coins: {node.coins}</div>
       <div className={styles.id}>Referral Code: {node.referralCode}</div>
 
-      {(!left || !right) && (
+      {/* Check if left child exists before rendering the button */}
+      {!left && (
         <div className={styles.addChild}>
-          {!left && (
-            <button
-              className={styles.addChildButton}
-              onClick={() => handleAddChild("left")}
-            >
-              <i className="fas fa-plus"></i> Add Left Child
-            </button>
-          )}
-          {!right && (
-            <button
-              className={styles.addChildButton}
-              onClick={() => handleAddChild("right")}
-            >
-              <i className="fas fa-plus"></i> Add Right Child
-            </button>
-          )}
+          <button
+            className={styles.addChildButton}
+            onClick={() => handleAddChild("left")}
+          >
+            <i className="fas fa-plus"></i> Add Left Child
+          </button>
+        </div>
+      )}
+
+      {/* Check if right child exists before rendering the button */}
+      {!right && (
+        <div className={styles.addChild}>
+          <button
+            className={styles.addChildButton}
+            onClick={() => handleAddChild("right")}
+          >
+            <i className="fas fa-plus"></i> Add Right Child
+          </button>
         </div>
       )}
 
       {left && (
         <div className={styles.lineWrapper}>
           <div className={`${styles.line} ${styles.lineLeft}`}></div>
-          {/* <div className={styles.arrowLeft}></div> */}
         </div>
       )}
 
       {right && (
         <div className={styles.lineWrapper}>
           <div className={`${styles.line} ${styles.lineRight}`}></div>
-          {/* <div className={styles.arrowRight}></div> */}
         </div>
       )}
+
+      <div className={styles.sendCoins}>
+        {!showCoinsPopup && (
+          <button
+            className={`${styles.sendCoinsButton} ${
+              updatingCoins ? styles.updating : ""
+            }`}
+            onClick={() => setShowCoinsPopup(true)}
+          >
+            Send Coins
+          </button>
+        )}
+        {showCoinsPopup && (
+          <div className={styles.coinsPopup}>
+            <input
+              type="number"
+              placeholder="Enter Coins"
+              value={newCoins}
+              onChange={handleCoinsChange}
+            />
+            <button
+              className={styles.updateCoinsButton}
+              onClick={handleUpdateCoins}
+            >
+              Update Coins
+            </button>
+          </div>
+        )}
+      </div>
     </div>
+    </>
   );
 };
 
@@ -121,36 +195,39 @@ const Index: React.FC = () => {
   const [parentId, setParentId] = useState("");
   const [selectedOption, setSelectedOption] = useState<"left" | "right">(
     "left"
-  ); // Default to left
-
+  );
   const [error, setError] = useState<Error | null>(null);
   const [success, setSuccess] = useState(false);
-  const [showForm, setShowForm] = useState(false); // State to toggle form visibility
+  const [showForm, setShowForm] = useState(false);
+  const [refreshKey, setRefreshKey] = useState(0); // State to trigger re-render
 
-  
+  useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await fetch("https://www.referback.trollsufficient.com/admin/all");
-        if (!response.ok) {
-          throw new Error("Failed to fetch users");
-        }
-        const data: User[] = await response.json();
-        console.log("raaz", data);
-        setUsers(data);
-        const map = createBinaryTree(data);
+        const token = localStorage.getItem("accessToken");
+        const response = await axios.get(
+          "https://www.referback.trollsufficient.com/admin/all",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        setUsers(response.data);
+        const map = createBinaryTree(response.data);
         setUserMap(map);
 
-        if (data.length > 0) {
-          setCurrentNode(data[0]);
+        if (response.data.length > 0) {
+          setCurrentNode(response.data[0]);
         }
       } catch (error) {
         console.error("Error fetching users:", error);
-        // Handle error state
       }
     };
-    useEffect(() => {
+
     fetchUsers();
-  }, []);
+  }, [refreshKey]); // Trigger fetch on refreshKey change
 
   const handleNodeClick = (node: User) => {
     setCurrentNode(node);
@@ -161,12 +238,11 @@ const Index: React.FC = () => {
     selectedOption: "left" | "right"
   ) => {
     try {
-      setParentId(parentId); // Set parentId in state when clicking on Add Child button
-      setSelectedOption(selectedOption); // Set selectedOption in state
-      setShowForm(true); // Show the form
+      setParentId(parentId);
+      setSelectedOption(selectedOption);
+      setShowForm(true);
     } catch (error) {
       console.error("Error handling add child:", error);
-      // setError(error);
     }
   };
 
@@ -185,7 +261,7 @@ const Index: React.FC = () => {
           ? `https://www.referback.trollsufficient.com/admin/add-left-child/${parentId}`
           : `https://www.referback.trollsufficient.com/add-right-child/${parentId}`;
 
-      const token = localStorage.getItem("accessToken"); // Assuming the token is stored with this key
+      const token = localStorage.getItem("accessToken");
 
       const response = await axios.put(apiEndpoint, formData, {
         headers: {
@@ -201,41 +277,13 @@ const Index: React.FC = () => {
       console.log("Child added successfully:", response.data);
       setSuccess(true);
 
-      // Fetch updated users after adding new user
-      fetchUsers();
+      // Trigger refresh by incrementing refreshKey
+      setRefreshKey((prevKey) => prevKey + 1);
     } catch (error) {
       console.error("Error adding child:", error);
-      // setError(error);
+      setError(error);
     }
   };
-
-  // console.log("hai bhai hai",token)
-  useEffect(() => {
-    const fetchUsers = async () => {
-      try {
-        const token = localStorage.getItem("accessToken");
-        console.log("tokennn", token);
-        const response = await axios.get("https://www.referback.trollsufficient.com/admin/all", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        });
-        setUsers(response.data);
-        console.log("raaz", users);
-        const map = createBinaryTree(response.data);
-        setUserMap(map);
-
-        if (response.data.length > 0) {
-          setCurrentNode(response.data[0]);
-        }
-      } catch (error) {
-        console.error("Error fetching users:", error);
-      }
-    };
-
-    fetchUsers();
-  }, []);
 
   const handleCloseForm = () => {
     setShowForm(false);
@@ -255,7 +303,6 @@ const Index: React.FC = () => {
       <div className={styles.children}>
         {userMap && userMap.has(node._id) && (
           <>
-            {console.log("raazs", users)}
             {userMap.get(node._id)!.left && (
               <div className={styles.child}>
                 <TreeNode
@@ -264,6 +311,7 @@ const Index: React.FC = () => {
                   right={userMap.get(node._id)!.left!.right}
                   onClick={handleNodeClick}
                   onAddChild={handleAddChild}
+                  refreshKey={refreshKey} // Pass refreshKey
                 />
               </div>
             )}
@@ -275,6 +323,7 @@ const Index: React.FC = () => {
                   right={userMap.get(node._id)!.right!.right}
                   onClick={handleNodeClick}
                   onAddChild={handleAddChild}
+                  refreshKey={refreshKey} // Pass refreshKey
                 />
               </div>
             )}
@@ -298,6 +347,7 @@ const Index: React.FC = () => {
           right={userMap?.get(node._id)?.right || null}
           onClick={handleNodeClick}
           onAddChild={handleAddChild}
+          refreshKey={refreshKey} // Pass refreshKey
         />
         <div className={styles.children}>
           {leftNode && renderCompleteTree(leftNode)}
@@ -310,83 +360,81 @@ const Index: React.FC = () => {
   return (
     <div>
       <Navbar />
-      <div style={{ display: "flex" }}>
-        {/* <Dashboard /> */}
-        <div className={styles.container}>
-          <div className={styles.buttonWrapper}>
-            <button
-              className={styles.toggleButton}
-              onClick={() => setViewAll(!viewAll)}
-            >
-              {viewAll ? "View Initial Nodes" : "View All Nodes"}
-            </button>
-          </div>
-          <div className={styles.treeContainer}>
-            {viewAll
-              ? renderCompleteTree(currentNode)
-              : currentNode && (
-                  <div>
-                    <TreeNode
-                      node={currentNode}
-                      left={userMap?.get(currentNode._id)?.left || null}
-                      right={userMap?.get(currentNode._id)?.right || null}
-                      onClick={handleNodeClick}
-                      onAddChild={handleAddChild}
-                    />
-                    {renderInitialNodes(currentNode)}
-                  </div>
-                )}
-          </div>
-
-          {showForm && (
-            <div className={styles.modal}>
-              <div className={styles.modalContent}>
-                <span className={styles.close} onClick={handleCloseForm}>
-                  &times;
-                </span>
-                <form onSubmit={handleSubmit} className={styles.form}>
-                  <label>
-                    Name:
-                    <input
-                      type="text"
-                      name="name"
-                      value={formData.name}
-                      onChange={handleChange}
-                    />
-                  </label>
-                  <label>
-                    Email:
-                    <input
-                      type="email"
-                      name="email"
-                      value={formData.email}
-                      onChange={handleChange}
-                    />
-                  </label>
-                  <label>
-                    Password:
-                    <input
-                      type="password"
-                      name="password"
-                      value={formData.password}
-                      onChange={handleChange}
-                    />
-                  </label>
-                  <button type="submit">Add Child</button>
-                </form>
-                {error && (
-                  <div className={styles.error}>Error: {error.message}</div>
-                )}
-                {success && (
-                  <div className={styles.success}>
-                    Child added successfully!
-                  </div>
-                )}
-              </div>
-            </div>
-          )}
+      <div className={styles.container}>
+        <div className={styles.buttonWrapper}>
+          <button
+            className={styles.toggleButton}
+            onClick={() => setViewAll(!viewAll)}
+          >
+            {viewAll ? "View Initial Nodes" : "View All Nodes"}
+          </button>
+        </div>
+        <div className={styles.treeContainer}>
+          {viewAll
+            ? renderCompleteTree(currentNode)
+            : currentNode && (
+                <div>
+                  <TreeNode
+                    node={currentNode}
+                    left={userMap?.get(currentNode._id)?.left || null}
+                    right={userMap?.get(currentNode._id)?.right || null}
+                    onClick={handleNodeClick}
+                    onAddChild={handleAddChild}
+                    refreshKey={refreshKey} // Pass refreshKey
+                  />
+                  {renderInitialNodes(currentNode)}
+                </div>
+              )}
         </div>
       </div>
+
+      {showForm && (
+        <div className={styles.modal}>
+          <div className={styles.modalContent}>
+            <span className={styles.close} onClick={handleCloseForm}>
+              &times;
+            </span>
+            <form onSubmit={handleSubmit} className={styles.form}>
+              <label>
+                Name:
+                <input
+                  type="text"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleChange}
+                />
+              </label>
+              <label>
+                Email:
+                <input
+                  type="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                />
+              </label>
+              <label>
+                Password:
+                <input
+                  type="password"
+                  name="password"
+                  value={formData.password}
+                  onChange={handleChange}
+                />
+              </label>
+              <button type="submit">Add Child</button>
+            </form>
+            {error && (
+              <div className={styles.error}>Error: {error.message}</div>
+            )}
+            {success && (
+              <div className={styles.success}>
+                Child added successfully!
+              </div>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 };

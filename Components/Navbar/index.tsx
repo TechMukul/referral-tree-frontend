@@ -21,20 +21,22 @@ const Navbar = () => {
     loadNavComponent();
 
     // Fetch user's name and coins from query parameters or local storage
-    const { name } = router.query;
-    if (name && typeof name === 'string') {
-      setUserName(name);
-      localStorage.setItem('userName', name); // Store the user's name in local storage
-    } else {
-      const storedName = localStorage.getItem('userName');
-      if (storedName) {
-        setUserName(storedName);
+    if (typeof window !== 'undefined') { // Check if window is defined (client-side)
+      const { name } = router.query;
+      if (name && typeof name === 'string') {
+        setUserName(name);
+        localStorage.setItem('userName', name); // Store the user's name in local storage
+      } else {
+        const storedName = localStorage.getItem('userName');
+        if (storedName) {
+          setUserName(storedName);
+        }
       }
-    }
 
-    const storedCoins = localStorage.getItem('userCoins');
-    if (storedCoins) {
-      setUserCoins(storedCoins);
+      const storedCoins = localStorage.getItem('userCoins');
+      if (storedCoins) {
+        setUserCoins(storedCoins);
+      }
     }
   }, [router.query]);
 
@@ -44,14 +46,12 @@ const Navbar = () => {
     localStorage.removeItem('userCoins'); // Remove the user's coins from local storage
     router.push('/');
   };
-    // console.log("sass",localStorage)
-    const tcoins=  localStorage.getItem("userCoins")
-    // console.log("sa",tcoins)
+
   return (
     <>
       <div className={style.navbar}>
         <div className={style.username}>{userName ? `Hi ${userName}` : 'Welcome User'}</div>
-        {userCoins && <div className={style.coins}>{`Coins: ${tcoins}`}</div>}
+        {userCoins && <div className={style.coins}>{`Coins: ${userCoins}`}</div>}
         <div className={style.navlinksContainer}>
           <Link href="/home" className={style.navlinks}>
             Home

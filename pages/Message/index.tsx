@@ -10,10 +10,10 @@ import Navbar from '../../Components/Navbar/index';
 const socket = io('https://www.referback.trollsufficient.com');
 
 const Message = () => {
-  const [sender, setSender] = useState('');
-  const [content, setContent] = useState('');
-  const [messages, setMessages] = useState([]);
-  const messageEndRef = useRef(null);
+  const [sender, setSender] = useState<any>('');
+  const [content, setContent] = useState<any>('');
+  const [messages, setMessages] = useState<any>([]);
+  const messageEndRef = useRef<any>(null);
 
   useEffect(() => {
     // Fetch initial messages
@@ -30,7 +30,7 @@ const Message = () => {
 
     // Listen for incoming messages
     socket.on('message', (newMessage) => {
-      setMessages((prevMessages) => [...prevMessages, newMessage]);
+      setMessages((prevMessages:any) => [...prevMessages, newMessage]);
     });
 
     // Cleanup on unmount
@@ -44,7 +44,7 @@ const Message = () => {
     scrollToBottom();
   }, [messages]);
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e:any) => {
     e.preventDefault();
     if (!sender || !content) return;
 
@@ -55,14 +55,14 @@ const Message = () => {
         content: content
       });
 
-      setMessages((prevMessages) => [...prevMessages, response.data]);
+      setMessages((prevMessages:any) => [...prevMessages, response.data]);
       setContent('');
     } catch (error) {
       console.error('Error sending message:', error);
     }
   };
 
-  const handleKeyPress = (e) => {
+  const handleKeyPress = (e:any) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       handleSubmit(e);
     }
@@ -79,7 +79,7 @@ const Message = () => {
         <h2>Send a Message</h2>
         
         <div className={styles['message-container']}>
-          {messages.map((message, index) => (
+          {messages.map((message:any, index:any) => (
             <div
               key={index}
               className={`${styles['message']} ${message.sender === sender ? styles['sent'] : styles['received']}`}
