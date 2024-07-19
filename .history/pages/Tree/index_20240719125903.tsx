@@ -285,7 +285,7 @@ const Index: React.FC = () => {
 
       // Trigger refresh by incrementing refreshKey
       setRefreshKey((prevKey) => prevKey + 1);
-    } catch (error:any) {
+    } catch (error) {
       console.error("Error adding child:", error);
       setError(error);
     }

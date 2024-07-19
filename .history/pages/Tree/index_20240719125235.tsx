@@ -24,7 +24,6 @@ interface TreeNodeProps {
   onClick: (node: User) => void;
   onAddChild: (parentId: string, selectedOption: "left" | "right") => void;
   refreshKey: number; // Pass refreshKey as prop
-  userRole: string | null; // Pass userRole as prop
 }
 
 const createBinaryTree = (users: User[]): Map<string, TreeNodeProps> => {
@@ -54,7 +53,6 @@ const TreeNode: React.FC<TreeNodeProps> = ({
   onClick,
   onAddChild,
   refreshKey,
-  userRole,
 }) => {
   const [showCoinsPopup, setShowCoinsPopup] = useState(false);
   const [newCoins, setNewCoins] = useState("");
@@ -97,6 +95,8 @@ const TreeNode: React.FC<TreeNodeProps> = ({
   const handleAddChild = (selectedOption: "left" | "right") => {
     onAddChild(node._id, selectedOption);
   };
+
+  const userRole = localStorage.getItem("role");
 
   return (
     <>
@@ -145,8 +145,7 @@ const TreeNode: React.FC<TreeNodeProps> = ({
         )}
       </div>
 
-      {/* Conditionally render Send Coins button based on role */}
-      {userRole === "admin" && !showCoinsPopup && (
+      {!showCoinsPopup && (
         <button
           className={`${styles.sendCoinsButton} ${
             updatingCoins ? styles.updating : ""
@@ -199,7 +198,6 @@ const Index: React.FC = () => {
   const [success, setSuccess] = useState(false);
   const [showForm, setShowForm] = useState(false);
   const [refreshKey, setRefreshKey] = useState(0); // State to trigger re-render
-  const [userRole, setUserRole] = useState<string | null>(null); // State to store userRole
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -226,13 +224,7 @@ const Index: React.FC = () => {
       }
     };
 
-    const fetchUserRole = () => {
-      const role = localStorage.getItem("role");
-      setUserRole(role);
-    };
-
     fetchUsers();
-    fetchUserRole();
   }, [refreshKey]); // Trigger fetch on refreshKey change
 
   const handleNodeClick = (node: User) => {
@@ -285,7 +277,7 @@ const Index: React.FC = () => {
 
       // Trigger refresh by incrementing refreshKey
       setRefreshKey((prevKey) => prevKey + 1);
-    } catch (error:any) {
+    } catch (error) {
       console.error("Error adding child:", error);
       setError(error);
     }
@@ -318,7 +310,6 @@ const Index: React.FC = () => {
                   onClick={handleNodeClick}
                   onAddChild={handleAddChild}
                   refreshKey={refreshKey} // Pass refreshKey
-                  userRole={userRole} // Pass userRole
                 />
               </div>
             )}
@@ -331,7 +322,6 @@ const Index: React.FC = () => {
                   onClick={handleNodeClick}
                   onAddChild={handleAddChild}
                   refreshKey={refreshKey} // Pass refreshKey
-                  userRole={userRole} // Pass userRole
                 />
               </div>
             )}
@@ -356,7 +346,6 @@ const Index: React.FC = () => {
           onClick={handleNodeClick}
           onAddChild={handleAddChild}
           refreshKey={refreshKey} // Pass refreshKey
-          userRole={userRole} // Pass userRole
         />
         <div className={styles.children}>
           {leftNode && renderCompleteTree(leftNode)}
@@ -390,7 +379,6 @@ const Index: React.FC = () => {
                     onClick={handleNodeClick}
                     onAddChild={handleAddChild}
                     refreshKey={refreshKey} // Pass refreshKey
-                    userRole={userRole} // Pass userRole
                   />
                   {renderInitialNodes(currentNode)}
                 </div>

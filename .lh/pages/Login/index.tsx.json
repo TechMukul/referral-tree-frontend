@@ -3,7 +3,7 @@
     "activeCommit": 0,
     "commits": [
         {
-            "activePatchIndex": 4,
+            "activePatchIndex": 6,
             "patches": [
                 {
                     "date": 1721366030130,
@@ -24,6 +24,14 @@
                 {
                     "date": 1721368723087,
                     "content": "Index: \n===================================================================\n--- \n+++ \n@@ -17,11 +17,9 @@\n         password,\r\n       });\r\n       const { token } = loginResponse.data;\r\n       localStorage.setItem('accessToken', token);\r\n-      localStorage.setItem('emails',email)\r\n-    \r\n-      // const emails=\r\n+\r\n       // Fetch user details to get the name\r\n       const userResponse = await axios.post(\r\n         'https://www.referback.trollsufficient.com/admin/user',\r\n         { email },\r\n@@ -35,10 +33,21 @@\n \r\n       const userName = userResponse.data.name;\r\n       localStorage.setItem('userName', userName); // Store the user's name in local storage\r\n \r\n-    \r\n+      // Fetch user's coins\r\n+      const coinsResponse = await axios.post(\r\n+        'https://www.referback.trollsufficient.com/admin/coins',\r\n+        { email },\r\n+      );\r\n \r\n+      // Log the entire response to check its structure\r\n+      console.log('coinsResponse:', coinsResponse);\r\n+\r\n+      const userCoins = coinsResponse.data.Coins;\r\n+\r\n+      localStorage.setItem('userCoins', userCoins); \r\n+\r\n       router.push({\r\n         pathname: '/home',\r\n         query: { name: userName },\r\n       });\r\n"
+                },
+                {
+                    "date": 1721373408391,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -15,10 +15,11 @@\n       const loginResponse = await axios.post('https://www.referback.trollsufficient.com/admin/login', {\r\n         email,\r\n         password,\r\n       });\r\n-      const { token } = loginResponse.data;\r\n+      const { token,role } = loginResponse.data;\r\n       localStorage.setItem('accessToken', token);\r\n+      localStorage.setItem('role',role)\r\n \r\n       // Fetch user details to get the name\r\n       const userResponse = await axios.post(\r\n         'https://www.referback.trollsufficient.com/admin/user',\r\n"
+                },
+                {
+                    "date": 1721373465355,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -18,8 +18,9 @@\n       });\r\n       const { token,role } = loginResponse.data;\r\n       localStorage.setItem('accessToken', token);\r\n       localStorage.setItem('role',role)\r\n+      console.log(\"login\",role)\r\n \r\n       // Fetch user details to get the name\r\n       const userResponse = await axios.post(\r\n         'https://www.referback.trollsufficient.com/admin/user',\r\n"
                 }
             ],
             "date": 1721366030130,

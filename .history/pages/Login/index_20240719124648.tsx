@@ -19,7 +19,6 @@ const Index = () => {
       const { token,role } = loginResponse.data;
       localStorage.setItem('accessToken', token);
       localStorage.setItem('role',role)
-      console.log("login",role)
 
       // Fetch user details to get the name
       const userResponse = await axios.post(

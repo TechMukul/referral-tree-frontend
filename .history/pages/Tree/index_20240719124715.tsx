@@ -24,7 +24,6 @@ interface TreeNodeProps {
   onClick: (node: User) => void;
   onAddChild: (parentId: string, selectedOption: "left" | "right") => void;
   refreshKey: number; // Pass refreshKey as prop
-  userRole: string | null; // Pass userRole as prop
 }
 
 const createBinaryTree = (users: User[]): Map<string, TreeNodeProps> => {
@@ -54,11 +53,12 @@ const TreeNode: React.FC<TreeNodeProps> = ({
   onClick,
   onAddChild,
   refreshKey,
-  userRole,
 }) => {
   const [showCoinsPopup, setShowCoinsPopup] = useState(false);
   const [newCoins, setNewCoins] = useState("");
   const [updatingCoins, setUpdatingCoins] = useState(false);
+
+  console.log(localStorage.getItem('role'))
 
   const handleCoinsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setNewCoins(e.target.value);
@@ -100,81 +100,82 @@ const TreeNode: React.FC<TreeNodeProps> = ({
 
   return (
     <>
-      <div className={styles.node} onClick={() => onClick(node)}>
-        <div className={styles.icon}>
-          <i className="fas fa-user"></i>
-        </div>
-        <div className={styles.name}>{node.name}</div>
-        <div className={styles.email}>{node.email}</div>
-        <div className={styles.id}>Coins: {node.coins}</div>
-        <div className={styles.id}>Referral Code: {node.referralCode}</div>
-
-        {/* Conditionally render Add Child buttons based on role */}
-        {userRole === "admin" && !left && (
-          <div className={styles.addChild}>
-            <button
-              className={styles.addChildButton}
-              onClick={() => handleAddChild("left")}
-            >
-              <i className="fas fa-plus"></i> Add Left Child
-            </button>
-          </div>
-        )}
-
-        {userRole === "admin" && !right && (
-          <div className={styles.addChild}>
-            <button
-              className={styles.addChildButton}
-              onClick={() => handleAddChild("right")}
-            >
-              <i className="fas fa-plus"></i> Add Right Child
-            </button>
-          </div>
-        )}
-
-        {left && (
-          <div className={styles.lineWrapper}>
-            <div className={`${styles.line} ${styles.lineLeft}`}></div>
-          </div>
-        )}
-
-        {right && (
-          <div className={styles.lineWrapper}>
-            <div className={`${styles.line} ${styles.lineRight}`}></div>
-          </div>
-        )}
+    <div className={styles.node} onClick={() => onClick(node)}>
+      <div className={styles.icon}>
+        <i className="fas fa-user"></i>
       </div>
+      <div className={styles.name}>{node.name}</div>
+      <div className={styles.email}>{node.email}</div>
+      <div className={styles.id}>Coins: {node.coins}</div>
+      <div className={styles.id}>Referral Code: {node.referralCode}</div>
 
-      {/* Conditionally render Send Coins button based on role */}
-      {userRole === "admin" && !showCoinsPopup && (
-        <button
-          className={`${styles.sendCoinsButton} ${
-            updatingCoins ? styles.updating : ""
-          }`}
-          onClick={() => setShowCoinsPopup(true)}
-        >
-          Send Coins
-        </button>
+      {/* Check if left child exists before rendering the button */}
+      {!left && (
+        <div className={styles.addChild}>
+          <button
+            className={styles.addChildButton}
+            onClick={() => handleAddChild("left")}
+          >
+            <i className="fas fa-plus"></i> Add Left Child
+          </button>
+        </div>
       )}
 
-      <div className={styles.sendCoins}>
-        {showCoinsPopup && (
-          <div className={styles.coinsPopup}>
-            <input
-              type="number"
-              placeholder="Enter Coins"
-              value={newCoins}
-              onChange={handleCoinsChange}
-            />
-            <button
-              className={styles.updateCoinsButton}
-              onClick={handleUpdateCoins}
-            >
-              Update Coins
-            </button>
-          </div>
-        )}
-      </div>
+      {/* Check if right child exists before rendering the button */}
+      {!right && (
+        <div className={styles.addChild}>
+          <button
+            className={styles.addChildButton}
+            onClick={() => handleAddChild("right")}
+          >
+            <i className="fas fa-plus"></i> Add Right Child
+          </button>
+        </div>
+      )}
+
+      {left && (
+        <div className={styles.lineWrapper}>
+          <div className={`${styles.line} ${styles.lineLeft}`}></div>
+        </div>
+      )}
+
+      {right && (
+        <div className={styles.lineWrapper}>
+          <div className={`${styles.line} ${styles.lineRight}`}></div>
+        </div>
+      )}
+
+      
+    </div>
+    {!showCoinsPopup && (
+          <button
+            className={`${styles.sendCoinsButton} ${
+              updatingCoins ? styles.updating : ""
+            }`}
+            onClick={() => setShowCoinsPopup(true)}
+          >
+            Send Coins
+          </button>
+        )}  
+        <div className={styles.sendCoins}>
+       
+       {showCoinsPopup && (
+         <div className={styles.coinsPopup}>
+           <input
+             type="number"
+             placeholder="Enter Coins"
+             value={newCoins}
+             onChange={handleCoinsChange}
+           />
+           <button
+             className={styles.updateCoinsButton}
+             onClick={handleUpdateCoins}
+           >
+             Update Coins
+           </button>
+         </div>
+       )}
+     </div>
     </>
   );
 };
@@ -199,7 +200,6 @@ const Index: React.FC = () => {
   const [success, setSuccess] = useState(false);
   const [showForm, setShowForm] = useState(false);
   const [refreshKey, setRefreshKey] = useState(0); // State to trigger re-render
-  const [userRole, setUserRole] = useState<string | null>(null); // State to store userRole
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -226,13 +226,7 @@ const Index: React.FC = () => {
       }
     };
 
-    const fetchUserRole = () => {
-      const role = localStorage.getItem("role");
-      setUserRole(role);
-    };
-
     fetchUsers();
-    fetchUserRole();
   }, [refreshKey]); // Trigger fetch on refreshKey change
 
   const handleNodeClick = (node: User) => {
@@ -285,7 +279,7 @@ const Index: React.FC = () => {
 
       // Trigger refresh by incrementing refreshKey
       setRefreshKey((prevKey) => prevKey + 1);
-    } catch (error:any) {
+    } catch (error) {
       console.error("Error adding child:", error);
       setError(error);
     }
@@ -318,7 +312,6 @@ const Index: React.FC = () => {
                   onClick={handleNodeClick}
                   onAddChild={handleAddChild}
                   refreshKey={refreshKey} // Pass refreshKey
-                  userRole={userRole} // Pass userRole
                 />
               </div>
             )}
@@ -331,7 +324,6 @@ const Index: React.FC = () => {
                   onClick={handleNodeClick}
                   onAddChild={handleAddChild}
                   refreshKey={refreshKey} // Pass refreshKey
-                  userRole={userRole} // Pass userRole
                 />
               </div>
             )}
@@ -356,7 +348,6 @@ const Index: React.FC = () => {
           onClick={handleNodeClick}
           onAddChild={handleAddChild}
           refreshKey={refreshKey} // Pass refreshKey
-          userRole={userRole} // Pass userRole
         />
         <div className={styles.children}>
           {leftNode && renderCompleteTree(leftNode)}
@@ -390,7 +381,6 @@ const Index: React.FC = () => {
                     onClick={handleNodeClick}
                     onAddChild={handleAddChild}
                     refreshKey={refreshKey} // Pass refreshKey
-                    userRole={userRole} // Pass userRole
                   />
                   {renderInitialNodes(currentNode)}
                 </div>
@@ -432,9 +422,7 @@ const Index: React.FC = () => {
                   onChange={handleChange}
                 />
               </label>
-              {userRole === "admin" && (
-                <button type="submit">Add Child</button>
-              )}
+              <button type="submit">Add Child</button>
             </form>
             {error && (
               <div className={styles.error}>Error: {error.message}</div>
