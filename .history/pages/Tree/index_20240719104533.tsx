@@ -23,11 +23,10 @@ interface TreeNodeProps {
   right: TreeNodeProps | null;
   onClick: (node: User) => void;
   onAddChild: (parentId: string, selectedOption: "left" | "right") => void;
-  refreshKey: number; // Pass refreshKey as prop
 }
 
 const createBinaryTree = (users: User[]): Map<string, TreeNodeProps> => {
-  const userMap = new Map<string, any>();
+  const userMap = new Map<string, TreeNodeProps>();
 
   users.forEach((user) => {
     userMap.set(user._id, { node: user, left: null, right: null });
@@ -52,7 +51,6 @@ const TreeNode: React.FC<TreeNodeProps> = ({
   right,
   onClick,
   onAddChild,
-  refreshKey,
 }) => {
   const [showCoinsPopup, setShowCoinsPopup] = useState(false);
   const [newCoins, setNewCoins] = useState("");
@@ -107,7 +105,6 @@ const TreeNode: React.FC<TreeNodeProps> = ({
       <div className={styles.id}>Coins: {node.coins}</div>
       <div className={styles.id}>Referral Code: {node.referralCode}</div>
 
-      {/* Check if left child exists before rendering the button */}
       {!left && (
         <div className={styles.addChild}>
           <button
@@ -119,7 +116,6 @@ const TreeNode: React.FC<TreeNodeProps> = ({
         </div>
       )}
 
-      {/* Check if right child exists before rendering the button */}
       {!right && (
         <div className={styles.addChild}>
           <button
@@ -143,6 +139,25 @@ const TreeNode: React.FC<TreeNodeProps> = ({
         </div>
       )}
 
+      <div className={styles.sendCoins}>
+       
+        {showCoinsPopup && (
+          <div className={styles.coinsPopup}>
+            <input
+              type="number"
+              placeholder="Enter Coins"
+              value={newCoins}
+              onChange={handleCoinsChange}
+            />
+            <button
+              className={styles.updateCoinsButton}
+              onClick={handleUpdateCoins}
+            >
+              Update Coins
+            </button>
+          </div>
+        )}
+      </div>
       
     </div>
     {!showCoinsPopup && (
@@ -154,26 +169,7 @@ const TreeNode: React.FC<TreeNodeProps> = ({
           >
             Send Coins
           </button>
-        )}  
-        <div className={styles.sendCoins}>
-       
-       {showCoinsPopup && (
-         <div className={styles.coinsPopup}>
-           <input
-             type="number"
-             placeholder="Enter Coins"
-             value={newCoins}
-             onChange={handleCoinsChange}
-           />
-           <button
-             className={styles.updateCoinsButton}
-             onClick={handleUpdateCoins}
-           >
-             Update Coins
-           </button>
-         </div>
-       )}
-     </div>
+        )}
     </>
   );
 };
@@ -185,19 +181,6 @@ const Index: React.FC = () => {
   );
   const [currentNode, setCurrentNode] = useState<User | null>(null);
   const [viewAll, setViewAll] = useState(false);
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    password: "",
-  });
-  const [parentId, setParentId] = useState("");
-  const [selectedOption, setSelectedOption] = useState<"left" | "right">(
-    "left"
-  );
-  const [error, setError] = useState<Error | null>(null);
-  const [success, setSuccess] = useState(false);
-  const [showForm, setShowForm] = useState(false);
-  const [refreshKey, setRefreshKey] = useState(0); // State to trigger re-render
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -216,6 +199,21 @@ const Index: React.FC = () => {
         const map = createBinaryTree(response.data);
         setUserMap(map);
 
+        const email =localStorage.getItem('emails')
+  // Fetch user's coins
+  const coinsResponse = await axios.post(
+    'https://www.referback.trollsufficient.com/admin/coins',
+    { email },
+  );
+
+  // Log the entire response to check its structure
+  // console.log('coinsResponse:', coinsResponse);
+
+  const userCoins = coinsResponse.data.Coins;
+
+  localStorage.setItem('userCoins', userCoins); 
+
+
         if (response.data.length > 0) {
           setCurrentNode(response.data[0]);
         }
@@ -225,7 +223,7 @@ const Index: React.FC = () => {
     };
 
     fetchUsers();
-  }, [refreshKey]); // Trigger fetch on refreshKey change
+  }, []);
 
   const handleNodeClick = (node: User) => {
     setCurrentNode(node);
@@ -236,62 +234,13 @@ const Index: React.FC = () => {
     selectedOption: "left" | "right"
   ) => {
     try {
-      setParentId(parentId);
-      setSelectedOption(selectedOption);
-      setShowForm(true);
+      // Implement add child logic here
+
+      // Reload the page after adding the child to reflect changes
+      window.location.reload();
     } catch (error) {
       console.error("Error handling add child:", error);
     }
-  };
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
-  };
-
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    try {
-      const apiEndpoint =
-        selectedOption === "left"
-          ? `https://www.referback.trollsufficient.com/admin/add-left-child/${parentId}`
-          : `https://www.referback.trollsufficient.com/add-right-child/${parentId}`;
-
-      const token = localStorage.getItem("accessToken");
-
-      const response = await axios.put(apiEndpoint, formData, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      if (response.status !== 200) {
-        throw new Error("Failed to add child");
-      }
-
-      console.log("Child added successfully:", response.data);
-      setSuccess(true);
-
-      // Trigger refresh by incrementing refreshKey
-      setRefreshKey((prevKey) => prevKey + 1);
-    } catch (error) {
-      console.error("Error adding child:", error);
-      setError(error);
-    }
-  };
-
-  const handleCloseForm = () => {
-    setShowForm(false);
-    setFormData({
-      name: "",
-      email: "",
-      password: "",
-    });
-    setError(null);
-    setSuccess(false);
   };
 
   const renderInitialNodes = (node: User | null) => {
@@ -302,26 +251,30 @@ const Index: React.FC = () => {
         {userMap && userMap.has(node._id) && (
           <>
             {userMap.get(node._id)!.left && (
-              <div className={styles.child}>
+              <div
+                className={styles.child}
+                key={userMap.get(node._id)!.left!.node._id}
+              >
                 <TreeNode
                   node={userMap.get(node._id)!.left!.node}
                   left={userMap.get(node._id)!.left!.left}
                   right={userMap.get(node._id)!.left!.right}
                   onClick={handleNodeClick}
                   onAddChild={handleAddChild}
-                  refreshKey={refreshKey} // Pass refreshKey
                 />
               </div>
             )}
             {userMap.get(node._id)!.right && (
-              <div className={styles.child}>
+              <div
+                className={styles.child}
+                key={userMap.get(node._id)!.right!.node._id}
+              >
                 <TreeNode
                   node={userMap.get(node._id)!.right!.node}
                   left={userMap.get(node._id)!.right!.left}
                   right={userMap.get(node._id)!.right!.right}
                   onClick={handleNodeClick}
                   onAddChild={handleAddChild}
-                  refreshKey={refreshKey} // Pass refreshKey
                 />
               </div>
             )}
@@ -338,14 +291,13 @@ const Index: React.FC = () => {
     const rightNode = userMap?.get(node._id)?.right?.node || null;
 
     return (
-      <div>
+      <div key={node._id}>
         <TreeNode
           node={node}
           left={userMap?.get(node._id)?.left || null}
           right={userMap?.get(node._id)?.right || null}
           onClick={handleNodeClick}
           onAddChild={handleAddChild}
-          refreshKey={refreshKey} // Pass refreshKey
         />
         <div className={styles.children}>
           {leftNode && renderCompleteTree(leftNode)}
@@ -371,68 +323,19 @@ const Index: React.FC = () => {
           {viewAll
             ? renderCompleteTree(currentNode)
             : currentNode && (
-                <div>
+                <div key={currentNode._id}>
                   <TreeNode
                     node={currentNode}
                     left={userMap?.get(currentNode._id)?.left || null}
                     right={userMap?.get(currentNode._id)?.right || null}
                     onClick={handleNodeClick}
                     onAddChild={handleAddChild}
-                    refreshKey={refreshKey} // Pass refreshKey
                   />
                   {renderInitialNodes(currentNode)}
                 </div>
               )}
         </div>
       </div>
-
-      {showForm && (
-        <div className={styles.modal}>
-          <div className={styles.modalContent}>
-            <span className={styles.close} onClick={handleCloseForm}>
-              &times;
-            </span>
-            <form onSubmit={handleSubmit} className={styles.form}>
-              <label>
-                Name:
-                <input
-                  type="text"
-                  name="name"
-                  value={formData.name}
-                  onChange={handleChange}
-                />
-              </label>
-              <label>
-                Email:
-                <input
-                  type="email"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleChange}
-                />
-              </label>
-              <label>
-                Password:
-                <input
-                  type="password"
-                  name="password"
-                  value={formData.password}
-                  onChange={handleChange}
-                />
-              </label>
-              <button type="submit">Add Child</button>
-            </form>
-            {error && (
-              <div className={styles.error}>Error: {error.message}</div>
-            )}
-            {success && (
-              <div className={styles.success}>
-                Child added successfully!
-              </div>
-            )}
-          </div>
-        </div>
-      )}
     </div>
   );
 };

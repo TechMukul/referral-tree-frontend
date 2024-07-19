@@ -10,10 +10,10 @@ import Navbar from '../../Components/Navbar/index';
 const socket = io('https://www.referback.trollsufficient.com');
 
 const Message = () => {
-  const [content, setContent] = useState<any>('');
-  const [messages, setMessages] = useState<any>([]);
-  const [userName, setUserName] = useState<any>('');
-  const messageEndRef = useRef<any>(null);
+  const [content, setContent] = useState('');
+  const [messages, setMessages] = useState([]);
+  const [userName, setUserName] = useState('');
+  const messageEndRef = useRef(null);
 
   useEffect(() => {
     // Fetch the user's name from local storage
@@ -35,8 +35,8 @@ const Message = () => {
     fetchMessages();
 
     // Listen for incoming messages
-    socket.on('message', (newMessage:any) => {
-      setMessages((prevMessage:any) => [...prevMessage, newMessage]);
+    socket.on('message', (newMessage) => {
+      setMessages((prevMessages) => [...prevMessages, newMessage]);
     });
 
     // Cleanup on unmount
@@ -69,7 +69,7 @@ const Message = () => {
     }
   };
 
-  const handleSubmit = async (e:any) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!content) return;
 
@@ -83,14 +83,14 @@ const Message = () => {
       // Emit the new message to all connected clients
       socket.emit('message', response.data);
 
-      setMessages((prevMessages:any) => [...prevMessages, response.data]);
+      setMessages((prevMessages) => [...prevMessages, response.data]);
       setContent('');
     } catch (error) {
       console.error('Error sending message:', error);
     }
   };
 
-  const handleKeyPress = (e:any) => {
+  const handleKeyPress = (e) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       handleSubmit(e);
     }
@@ -107,10 +107,10 @@ const Message = () => {
         <h2>Send a Message</h2>
         
         <div className={styles['message-container']}>
-          {messages.map((message:any, index:any) => (
+          {messages.map((message, index) => (
             <div
               key={index}
-              className={`${styles['message']} ${message.sender === userName ? styles['sent'] : styles['received']}`}
+              className={${styles['message']} ${message.sender === userName ? styles['sent'] : styles['received']}}
             >
               <strong>{message.sender}:</strong> {message.content}
             </div>

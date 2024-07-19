@@ -27,7 +27,7 @@ interface TreeNodeProps {
 }
 
 const createBinaryTree = (users: User[]): Map<string, TreeNodeProps> => {
-  const userMap = new Map<string, any>();
+  const userMap = new Map<string, TreeNodeProps>();
 
   users.forEach((user) => {
     userMap.set(user._id, { node: user, left: null, right: null });
@@ -79,17 +79,25 @@ const TreeNode: React.FC<TreeNodeProps> = ({
         }
       );
 
+      if (response.status !== 200) {
+        throw new Error("Failed to update coins");
+      }
+
       console.log("Coins updated successfully:", response.data);
       setNewCoins("");
       setShowCoinsPopup(false);
       setUpdatingCoins(false);
 
-      // Reload the page to reflect updated coins
-      window.location.reload();
+      // Trigger refresh by incrementing refreshKey
+      refreshKeyFunc();
     } catch (error) {
       console.error("Error updating coins:", error);
       setUpdatingCoins(false);
     }
+  };
+
+  const refreshKeyFunc = () => {
+    refreshKeyFunc(prev => prev + 1);
   };
 
   const handleAddChild = (selectedOption: "left" | "right") => {
@@ -98,82 +106,80 @@ const TreeNode: React.FC<TreeNodeProps> = ({
 
   return (
     <>
-    <div className={styles.node} onClick={() => onClick(node)}>
-      <div className={styles.icon}>
-        <i className="fas fa-user"></i>
-      </div>
-      <div className={styles.name}>{node.name}</div>
-      <div className={styles.email}>{node.email}</div>
-      <div className={styles.id}>Coins: {node.coins}</div>
-      <div className={styles.id}>Referral Code: {node.referralCode}</div>
-
-      {/* Check if left child exists before rendering the button */}
-      {!left && (
-        <div className={styles.addChild}>
-          <button
-            className={styles.addChildButton}
-            onClick={() => handleAddChild("left")}
-          >
-            <i className="fas fa-plus"></i> Add Left Child
-          </button>
+      <div className={styles.node} onClick={() => onClick(node)}>
+        <div className={styles.icon}>
+          <i className="fas fa-user"></i>
         </div>
-      )}
+        <div className={styles.name}>{node.name}</div>
+        <div className={styles.email}>{node.email}</div>
+        <div className={styles.id}>Coins: {node.coins}</div>
+        <div className={styles.id}>Referral Code: {node.referralCode}</div>
 
-      {/* Check if right child exists before rendering the button */}
-      {!right && (
-        <div className={styles.addChild}>
-          <button
-            className={styles.addChildButton}
-            onClick={() => handleAddChild("right")}
-          >
-            <i className="fas fa-plus"></i> Add Right Child
-          </button>
-        </div>
-      )}
+        {/* Check if left child exists before rendering the button */}
+        {!left && (
+          <div className={styles.addChild}>
+            <button
+              className={styles.addChildButton}
+              onClick={() => handleAddChild("left")}
+            >
+              <i className="fas fa-plus"></i> Add Left Child
+            </button>
+          </div>
+        )}
 
-      {left && (
-        <div className={styles.lineWrapper}>
-          <div className={`${styles.line} ${styles.lineLeft}`}></div>
-        </div>
-      )}
+        {/* Check if right child exists before rendering the button */}
+        {!right && (
+          <div className={styles.addChild}>
+            <button
+              className={styles.addChildButton}
+              onClick={() => handleAddChild("right")}
+            >
+              <i className="fas fa-plus"></i> Add Right Child
+            </button>
+          </div>
+        )}
 
-      {right && (
-        <div className={styles.lineWrapper}>
-          <div className={`${styles.line} ${styles.lineRight}`}></div>
-        </div>
-      )}
+        {left && (
+          <div className={styles.lineWrapper}>
+            <div className={`${styles.line} ${styles.lineLeft}`}></div>
+          </div>
+        )}
 
-      
-    </div>
-    {!showCoinsPopup && (
-          <button
-            className={`${styles.sendCoinsButton} ${
-              updatingCoins ? styles.updating : ""
-            }`}
-            onClick={() => setShowCoinsPopup(true)}
-          >
-            Send Coins
-          </button>
-        )}  
+        {right && (
+          <div className={styles.lineWrapper}>
+            <div className={`${styles.line} ${styles.lineRight}`}></div>
+          </div>
+        )}
+
         <div className={styles.sendCoins}>
-       
-       {showCoinsPopup && (
-         <div className={styles.coinsPopup}>
-           <input
-             type="number"
-             placeholder="Enter Coins"
-             value={newCoins}
-             onChange={handleCoinsChange}
-           />
-           <button
-             className={styles.updateCoinsButton}
-             onClick={handleUpdateCoins}
-           >
-             Update Coins
-           </button>
-         </div>
-       )}
-     </div>
+          {!showCoinsPopup && (
+            <button
+              className={`${styles.sendCoinsButton} ${
+                updatingCoins ? styles.updating : ""
+              }`}
+              onClick={() => setShowCoinsPopup(true)}
+            >
+              Send Coins
+            </button>
+          )}
+          {showCoinsPopup && (
+            <div className={styles.coinsPopup}>
+              <input
+                type="number"
+                placeholder="Enter Coins"
+                value={newCoins}
+                onChange={handleCoinsChange}
+              />
+              <button
+                className={styles.updateCoinsButton}
+                onClick={handleUpdateCoins}
+              >
+                Update Coins
+              </button>
+            </div>
+          )}
+        </div>
+      </div>
     </>
   );
 };

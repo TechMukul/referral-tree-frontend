@@ -79,13 +79,17 @@ const TreeNode: React.FC<TreeNodeProps> = ({
         }
       );
 
+      if (response.status !== 200) {
+        throw new Error("Failed to update coins");
+      }
+
       console.log("Coins updated successfully:", response.data);
       setNewCoins("");
       setShowCoinsPopup(false);
       setUpdatingCoins(false);
 
-      // Reload the page to reflect updated coins
-      window.location.reload();
+      // Trigger refresh by incrementing refreshKey
+      handleRefresh();
     } catch (error) {
       console.error("Error updating coins:", error);
       setUpdatingCoins(false);
@@ -143,9 +147,8 @@ const TreeNode: React.FC<TreeNodeProps> = ({
         </div>
       )}
 
-      
-    </div>
-    {!showCoinsPopup && (
+      <div className={styles.sendCoins}>
+        {!showCoinsPopup && (
           <button
             className={`${styles.sendCoinsButton} ${
               updatingCoins ? styles.updating : ""
@@ -154,26 +157,25 @@ const TreeNode: React.FC<TreeNodeProps> = ({
           >
             Send Coins
           </button>
-        )}  
-        <div className={styles.sendCoins}>
-       
-       {showCoinsPopup && (
-         <div className={styles.coinsPopup}>
-           <input
-             type="number"
-             placeholder="Enter Coins"
-             value={newCoins}
-             onChange={handleCoinsChange}
-           />
-           <button
-             className={styles.updateCoinsButton}
-             onClick={handleUpdateCoins}
-           >
-             Update Coins
-           </button>
-         </div>
-       )}
-     </div>
+        )}
+        {showCoinsPopup && (
+          <div className={styles.coinsPopup}>
+            <input
+              type="number"
+              placeholder="Enter Coins"
+              value={newCoins}
+              onChange={handleCoinsChange}
+            />
+            <button
+              className={styles.updateCoinsButton}
+              onClick={handleUpdateCoins}
+            >
+              Update Coins
+            </button>
+          </div>
+        )}
+      </div>
+    </div>
     </>
   );
 };

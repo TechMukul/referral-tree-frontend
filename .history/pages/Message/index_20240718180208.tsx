@@ -69,7 +69,7 @@ const Message = () => {
     }
   };
 
-  const handleSubmit = async (e:any) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!content) return;
 

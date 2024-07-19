@@ -160,8 +160,7 @@
 .sendCoinsButton {
   padding: 5px 10px;
   font-size: 12px;
-  // margin-left: 50px;
-  align-items: center;
+  margin-left: 50px;
   margin-bottom: 5px;
   transition: background-color 0.3s ease, box-shadow 0.3s ease;
   cursor: pointer;
@@ -180,12 +179,11 @@
 .coinsPopup {
   display: flex;
   flex-direction: column;
-  // margin-top: 2000px;
   align-items: center;
 }
 
 .coinsPopup input {
-  // padding: 8px;
+  padding: 8px;
   margin-bottom: 5px;
 }
 

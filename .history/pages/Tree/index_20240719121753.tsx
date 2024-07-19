@@ -143,9 +143,10 @@ const TreeNode: React.FC<TreeNodeProps> = ({
         </div>
       )}
 
-      
+     
     </div>
-    {!showCoinsPopup && (
+    <div className={styles.sendCoins}>
+        {!showCoinsPopup && (
           <button
             className={`${styles.sendCoinsButton} ${
               updatingCoins ? styles.updating : ""
@@ -154,26 +155,24 @@ const TreeNode: React.FC<TreeNodeProps> = ({
           >
             Send Coins
           </button>
-        )}  
-        <div className={styles.sendCoins}>
-       
-       {showCoinsPopup && (
-         <div className={styles.coinsPopup}>
-           <input
-             type="number"
-             placeholder="Enter Coins"
-             value={newCoins}
-             onChange={handleCoinsChange}
-           />
-           <button
-             className={styles.updateCoinsButton}
-             onClick={handleUpdateCoins}
-           >
-             Update Coins
-           </button>
-         </div>
-       )}
-     </div>
+        )}
+        {showCoinsPopup && (
+          <div className={styles.coinsPopup}>
+            <input
+              type="number"
+              placeholder="Enter Coins"
+              value={newCoins}
+              onChange={handleCoinsChange}
+            />
+            <button
+              className={styles.updateCoinsButton}
+              onClick={handleUpdateCoins}
+            >
+              Update Coins
+            </button>
+          </div>
+        )}
+      </div>
     </>
   );
 };
