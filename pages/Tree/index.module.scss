@@ -1,6 +1,5 @@
 .container {
   flex: 1;
-  padding: 20px;
   position: relative;
   top: 100px;
 }
@@ -18,6 +17,7 @@
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 5px;
+  background-color: #ffffff; /* Light background for nodes */
   margin: 10px;
   position: relative;
   transition: box-shadow 0.3s ease, transform 0.3s ease;
@@ -32,10 +32,12 @@
 .node .icon {
   font-size: 24px;
   margin-bottom: 5px;
+  color: #6b73ff; /* Soft color for icons */
 }
 
 .node .name {
   font-weight: bold;
+  color: #333; /* Darker text color for contrast */
 }
 
 .node .email {
@@ -88,17 +90,34 @@
 .addChildButton {
   padding: 5px 10px;
   font-size: 12px;
+  background-color: #e0f7fa; /* Soft background for buttons */
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+
+  &:hover {
+    background-color: #b2ebf2; /* Slightly darker hover background */
+  }
 }
 
 .buttonWrapper {
   display: flex;
   justify-content: center;
-  margin-bottom: 20px;
 }
 
 .toggleButton {
   padding: 10px 20px;
   font-size: 16px;
+  background-color: #e0f7fa; /* Soft background for buttons */
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+
+  &:hover {
+    background-color: #b2ebf2; /* Slightly darker hover background */
+  }
 }
 
 .modal {
@@ -114,7 +133,7 @@
 }
 
 .modalContent {
-  background: #fff;
+  background: #ffffff; /* Light background for modals */
   padding: 20px;
   border-radius: 5px;
   position: relative;
@@ -140,6 +159,8 @@
 .form input {
   padding: 8px;
   margin-top: 5px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
 }
 
 .error {
@@ -155,19 +176,20 @@
 .sendCoins {
   position: absolute;
   bottom: -35px; /* Adjust to position the button relative to the node */
+  width: 100%;
 }
 
 .sendCoinsButton {
   padding: 5px 10px;
   font-size: 12px;
-  // margin-left: 50px;
-  align-items: center;
-  margin-bottom: 5px;
-  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  background-color: #e0f7fa; /* Soft background for buttons */
+  border: none;
+  border-radius: 5px;
   cursor: pointer;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
 
   &:hover {
-    background-color: #007bff;
+    background-color: #b2ebf2; /* Slightly darker hover background */
     color: white;
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
   }
@@ -175,23 +197,6 @@
   &.updating {
     animation: pulse 1s infinite;
   }
-}
-
-.coinsPopup {
-  display: flex;
-  flex-direction: column;
-  // margin-top: 2000px;
-  align-items: center;
-}
-
-.coinsPopup input {
-  // padding: 8px;
-  margin-bottom: 5px;
-}
-
-.updateCoinsButton {
-  padding: 5px 10px;
-  font-size: 12px;
 }
 
 @keyframes pulse {
@@ -204,4 +209,64 @@
   100% {
     transform: scale(1);
   }
+}
+
+.sendCoins {
+  position: relative;
+  left: 100px;
+}
+
+.sendCoinsButton, .updateCoinsButton {
+  padding: 5px 10px;
+  font-size: 12px;
+  background-color: #e0f7fa; /* Soft background for buttons */
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  margin-bottom: 50px;
+
+  &:hover {
+    background-color: #b2ebf2; /* Slightly darker hover background */
+    color: white;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
+  }
+}
+
+.coinsPopup {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  width: 20%;
+}
+
+.coinsPopup > input, .coinsPopup > button {
+  padding: 3px;
+  height: 30px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.coinsPopup button {
+  position: relative;
+  top: 25px;
+  left: 10px;
+}
+
+.sendCoinnew {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+@media screen and (max-screen:480px) {
+  
+.treeContainer {
+  position: absolute;
+  top: 250px;
+  right: 0px;
+  left: 60px;
+}
+ 
 }

@@ -1,0 +1,38 @@
+{
+    "sourceFile": "pages/_app.tsx",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 5,
+            "patches": [
+                {
+                    "date": 1721480156379,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1721480358440,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,7 +1,7 @@\n // pages/_app.tsx\r\n import { AppProps } from 'next/app';\r\n-import './globals.css';\r\n+import '../styles/global.css';\r\n \r\n function MyApp({ Component, pageProps }: AppProps) {\r\n   return <Component {...pageProps} />;\r\n }\r\n"
+                },
+                {
+                    "date": 1721480415682,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -0,0 +1,9 @@\n+// pages/_app.tsx\r\n+import { AppProps } from 'next/app';\r\n+import '../styles/globals.css';\r\n+\r\n+function MyApp({ Component, pageProps }: AppProps) {\r\n+  return <Component {...pageProps} />;\r\n+}\r\n+\r\n+export default MyApp;\r\n"
+                },
+                {
+                    "date": 1721623928032,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -2,17 +2,11 @@\n import { AppProps } from 'next/app';\r\n import '../styles/globals.css';\r\n \r\n function MyApp({ Component, pageProps }: AppProps) {\r\n-  return <Component {...pageProps} />;\r\n+  return(\r\n+  //  <Component {...pageProps} />\r\n+  <p>Hello</p>\r\n+  )\r\n }\r\n \r\n export default MyApp;\r\n-// pages/_app.tsx\r\n-import { AppProps } from 'next/app';\r\n-import '../styles/global.css';\r\n-\r\n-function MyApp({ Component, pageProps }: AppProps) {\r\n-  return <Component {...pageProps} />;\r\n-}\r\n-\r\n-export default MyApp;\r\n"
+                },
+                {
+                    "date": 1721624057482,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -4,9 +4,9 @@\n \r\n function MyApp({ Component, pageProps }: AppProps) {\r\n   return(\r\n   //  <Component {...pageProps} />\r\n-  <p>Hello</p>\r\n+  <p className='text-red-500'>Hello</p>\r\n   )\r\n }\r\n \r\n export default MyApp;\r\n"
+                },
+                {
+                    "date": 1721624273788,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -0,0 +1,10 @@\n+// pages/_app.tsx\r\n+import { AppProps } from 'next/app';\r\n+import '../styles/globals.css';\r\n+\r\n+function MyApp({ Component, pageProps }: AppProps) {\r\n+  return <Component {...pageProps} />\r\n+  ;\r\n+}\r\n+\r\n+export default MyApp;\r\n"
+                }
+            ],
+            "date": 1721480156379,
+            "name": "Commit-0",
+            "content": "// pages/_app.tsx\r\nimport { AppProps } from 'next/app';\r\nimport './globals.css';\r\n\r\nfunction MyApp({ Component, pageProps }: AppProps) {\r\n  return <Component {...pageProps} />;\r\n}\r\n\r\nexport default MyApp;\r\n"
+        }
+    ]
+}

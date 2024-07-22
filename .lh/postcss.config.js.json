@@ -1,0 +1,18 @@
+{
+    "sourceFile": "postcss.config.js",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 0,
+            "patches": [
+                {
+                    "date": 1721480791526,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                }
+            ],
+            "date": 1721480791526,
+            "name": "Commit-0",
+            "content": "// postcss.config.js\nmodule.exports = {\n  plugins: {\n    tailwindcss: {},\n    autoprefixer: {},\n  },\n};\n"
+        }
+    ]
+}

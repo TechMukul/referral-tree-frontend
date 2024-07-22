@@ -1,0 +1,22 @@
+{
+    "sourceFile": "pages/index.tsx",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 1,
+            "patches": [
+                {
+                    "date": 1721480814036,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1721480821725,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -0,0 +1,23 @@\n+\"use client\";\r\n+import React from \"react\";\r\n+import { useRouter } from \"next/navigation\";\r\n+// import '../styles/styles.css'\r\n+const LoginPage = () => {\r\n+  const router = useRouter();\r\n+\r\n+  React.useEffect(() => {\r\n+    const token = localStorage.getItem(\"token\");\r\n+\r\n+    if (!token) {\r\n+      router.push(\"/Login\");\r\n+    }\r\n+  }, [router]);\r\n+\r\n+  return (\r\n+    <div className=\"index\" style={{ margin: \"0px\" }}>\r\n+      Please refresh this page again for the login Screen\r\n+    </div>\r\n+  );\r\n+};\r\n+\r\n+export default LoginPage;\r\n"
+                }
+            ],
+            "date": 1721480814036,
+            "name": "Commit-0",
+            "content": "// pages/_app.tsx\r\nimport { AppProps } from 'next/app';\r\nimport '../styles/globals.css'; // Ensure this path is correct\r\n\r\nfunction MyApp({ Component, pageProps }: AppProps) {\r\n  return <Component {...pageProps} />;\r\n}\r\n\r\nexport default MyApp;\r\n"
+        }
+    ]
+}

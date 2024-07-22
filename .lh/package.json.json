@@ -1,0 +1,18 @@
+{
+    "sourceFile": "package.json",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 0,
+            "patches": [
+                {
+                    "date": 1721624178341,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                }
+            ],
+            "date": 1721624178341,
+            "name": "Commit-0",
+            "content": "{\r\n  \"name\": \"referral-tree-frontend\",\r\n  \"version\": \"0.1.0\",\r\n  \"private\": true,\r\n  \"scripts\": {\r\n    \"dev\": \"next dev\",\r\n    \"build\": \"next build\",\r\n    \"start\": \"next start\",\r\n    \"lint\": \"next lint\"\r\n  },\r\n  \"dependencies\": {\r\n    \"@emotion/react\": \"^11.12.0\",\r\n    \"@emotion/styled\": \"^11.12.0\",\r\n    \"@fortawesome/fontawesome-svg-core\": \"^6.6.0\",\r\n    \"@fortawesome/free-solid-svg-icons\": \"^6.6.0\",\r\n    \"@fortawesome/react-fontawesome\": \"^0.2.2\",\r\n    \"@mui/icons-material\": \"^5.16.4\",\r\n    \"@mui/material\": \"^5.16.4\",\r\n    \"@tsparticles/engine\": \"^3.5.0\",\r\n    \"@tsparticles/react\": \"^3.0.0\",\r\n    \"@tsparticles/slim\": \"^3.5.0\",\r\n    \"agora-chat\": \"^1.2.2-3\",\r\n    \"agora-rtm-sdk\": \"^2.1.10\",\r\n    \"axios\": \"^1.7.2\",\r\n    \"bootstrap\": \"^5.3.3\",\r\n    \"chart.js\": \"^4.4.3\",\r\n    \"clsx\": \"^2.1.1\",\r\n    \"font-awesome\": \"^4.7.0\",\r\n    \"fortawesome\": \"^0.0.1-security\",\r\n    \"framer-motion\": \"^11.3.8\",\r\n    \"mini-svg-data-uri\": \"^1.4.4\",\r\n    \"next\": \"14.2.4\",\r\n    \"node-sass\": \"^9.0.0\",\r\n    \"react\": \"^18\",\r\n    \"react-bootstrap\": \"^2.10.3\",\r\n    \"react-chartjs-2\": \"^5.2.0\",\r\n    \"react-dom\": \"^18\",\r\n    \"react-fontawesome\": \"^1.7.1\",\r\n    \"react-router-dom\": \"^6.25.0\",\r\n    \"react-server-components\": \"^0.0.0\",\r\n    \"sass\": \"^1.77.6\",\r\n    \"scss\": \"^0.2.4\",\r\n    \"socket.io-client\": \"^4.7.5\",\r\n    \"tailwind-merge\": \"^2.4.0\"\r\n  },\r\n  \"devDependencies\": {\r\n    \r\n    \"@types/node\": \"^20\",\r\n    \"@types/react\": \"^18\",\r\n    \"@types/react-dom\": \"^18\",\r\n    \"autoprefixer\": \"^10.4.19\",\r\n    \"eslint\": \"^8\",\r\n    \"eslint-config-next\": \"14.2.4\",\r\n    \"postcss\": \"^8.4.39\",\r\n    \"tailwindcss\": \"^3.4.6\",\r\n    \"typescript\": \"^5\"\r\n  }\r\n}\r\n"
+        }
+    ]
+}

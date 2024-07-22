@@ -1,0 +1,50 @@
+{
+    "sourceFile": "styles/globals.css",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 8,
+            "patches": [
+                {
+                    "date": 1721480058290,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1721480337970,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,4 +1,4 @@\n-/* styles/globals.css */\r\n @tailwind base;\r\n @tailwind components;\r\n @tailwind utilities;\r\n+\r\n"
+                },
+                {
+                    "date": 1721480450567,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,4 +1,7 @@\n @tailwind base;\r\n @tailwind components;\r\n @tailwind utilities;\r\n \r\n+body {\r\n+  @apply bg-black;\r\n+}\r\n"
+                },
+                {
+                    "date": 1721480462446,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,7 +1,7 @@\n @tailwind base;\r\n @tailwind components;\r\n @tailwind utilities;\r\n \r\n-body {\r\n+* {\r\n   @apply bg-black;\r\n }\r\n"
+                },
+                {
+                    "date": 1721480467616,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,7 +1,7 @@\n @tailwind base;\r\n @tailwind components;\r\n @tailwind utilities;\r\n \r\n-* {\r\n+body {\r\n   @apply bg-black;\r\n }\r\n"
+                },
+                {
+                    "date": 1721480488397,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -0,0 +1,6 @@\n+/* styles/globals.css */\r\n+\r\n+body {\r\n+    background-color: black;\r\n+  }\r\n+  \n\\ No newline at end of file\n"
+                },
+                {
+                    "date": 1721480509466,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,13 +1,3 @@\n-/* styles/globals.css */\r\n-\r\n-body {\r\n-    background-color: black;\r\n-  }\r\n-  \n @tailwind base;\r\n @tailwind components;\r\n-@tailwind utilities;\r\n-\r\n-body {\r\n-  @apply bg-black;\r\n-}\n\\ No newline at end of file\n+@tailwind utilities;\n\\ No newline at end of file\n"
+                },
+                {
+                    "date": 1721480801871,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -0,0 +1,4 @@\n+/* styles/globals.css */\r\n+@tailwind base;\r\n+@tailwind components;\r\n+@tailwind utilities;\r\n"
+                },
+                {
+                    "date": 1721624088262,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -0,0 +1,4 @@\n+/* styles/globals.css */\r\n+@tailwind base;\r\n+@tailwind components;\r\n+@tailwind utilities;\r\n"
+                }
+            ],
+            "date": 1721480058290,
+            "name": "Commit-0",
+            "content": "/* styles/globals.css */\r\n@tailwind base;\r\n@tailwind components;\r\n@tailwind utilities;\r\n"
+        }
+    ]
+}

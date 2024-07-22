@@ -3,6 +3,7 @@ import axios from 'axios';
 import styles from './index.module.scss';
 import { useRouter } from 'next/router';
 
+
 const Index = () => {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
@@ -70,6 +71,7 @@ const Index = () => {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
+               autoComplete="current-username"
             />
             <label>Email</label>
             <div className={styles.inputUnderline}></div>
@@ -79,7 +81,8 @@ const Index = () => {
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              required
+              required 
+                  autoComplete="current-password"
             />
             <label>Password</label>
             <div className={styles.inputUnderline}></div>
